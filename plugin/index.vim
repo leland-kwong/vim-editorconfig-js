@@ -7,8 +7,6 @@ fun! EditorConfigShouldParse()
   return l:shouldParse
 endfun
 
-let s:ready = 0
-
 " A wrapper around vim's built-in `setbufvar` that only sets
 " the option if there is a difference between current and
 " new value. This prevents the situation with certain
@@ -52,7 +50,7 @@ fun! s:EditorConfigSetOptions(chan, data)
 endfun
 
 fun! s:EditorConfigParse()
-  if !s:ready || !EditorConfigShouldParse()
+  if !v:vim_did_enter || !EditorConfigShouldParse()
     return
   endif
 
@@ -67,7 +65,7 @@ fun! s:EditorConfigParse()
 
   " cancel previous job so we don't set options
   " for the wrong buffer.
-  if job_status(s:curJob) == 'run'
+  if exists('s:curJob') && job_status(s:curJob) == 'run'
     call job_stop(s:curJob)
   endif
 
@@ -75,17 +73,8 @@ fun! s:EditorConfigParse()
     \ #{callback: function('s:EditorConfigSetOptions')})
 endfun
 
-augroup VimEditorconfigJsSetReady
-  autocmd!
-  " on initial load of vim, the `BufEnter` command runs
-  " before `VimEnter` which causes the `l:plugDir` to be set
-  " to a value of `command line..script` which is an invalid
-  " file directory name.
-  autocmd VimEnter * let s:ready = 1
-augroup END
-
 augroup VimEditorconfigJs
   autocmd!
-  autocmd VimEnter,BufEnter *
+  autocmd BufEnter *
     \ call s:EditorConfigParse()
 augroup END
