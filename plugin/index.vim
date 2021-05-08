@@ -52,6 +52,11 @@ endfun
 fun! s:EditorConfigSetOptions(chan, data)
   let l:parsedConfig = json_decode(a:data)
 
+  if exists('l:parsedConfig.err')
+    echoerr l:parsedConfig.err
+    return
+  endif
+
   if exists('#EditorConfigTrimWhitespace')
     augroup EditorConfigTrimWhitespace
       au!
