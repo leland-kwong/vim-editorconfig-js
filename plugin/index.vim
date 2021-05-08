@@ -37,8 +37,26 @@ fun! g:editorConfigPropHandler.max_line_length(val)
   call s:SetBufVar('&textwidth', a:val)
 endfun
 
+fun! g:editorConfigPropHandler.trim_trailing_whitespace(shouldTrim)
+  if !a:shouldTrim
+    return
+  endif
+
+  augroup EditorConfigTrimWhitespace
+    au BufWritePre <buffer> let s:trimSave = winsaveview()
+      \ | keeppatterns %s/\s\+$//e
+      \ | call winrestview(s:trimSave)
+  augroup END
+endfun
+
 fun! s:EditorConfigSetOptions(chan, data)
   let l:parsedConfig = json_decode(a:data)
+
+  if exists('#EditorConfigTrimWhitespace')
+    augroup EditorConfigTrimWhitespace
+      au!
+    augroup END
+  endif
 
   for k in keys(l:parsedConfig)
     let l:val = l:parsedConfig[k]
@@ -73,8 +91,8 @@ fun! s:EditorConfigParse()
     \ #{callback: function('s:EditorConfigSetOptions')})
 endfun
 
-augroup VimEditorconfigJs
-  autocmd!
-  autocmd BufEnter *
+augroup EditorConfig
+  au!
+  au VimEnter,BufEnter *
     \ call s:EditorConfigParse()
 augroup END
