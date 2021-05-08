@@ -2,8 +2,11 @@
 "  Globals
 " =========
 let g:editorConfigPropHandler = {}
+
 fun! EditorConfigShouldParse()
-  let l:shouldParse = &buftype == '' && !&readonly
+  let l:shouldParse = &buftype == '' 
+    \ && &filetype != 'gitcommit'
+    \ && !&readonly
   return l:shouldParse
 endfun
 
