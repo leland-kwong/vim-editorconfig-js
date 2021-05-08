@@ -82,9 +82,10 @@ fun! s:EditorConfigParse()
 
   let l:plugDir = expand('<sfile>:p:h')
   let l:fileToCheck = expand('%:p')
+  let l:extension = expand('%:e')
 
   " this is empty for certain buffers like the cmdline history
-  if empty(l:fileToCheck)
+  if empty(l:fileToCheck) || empty(l:extension)
     return
   endif
 
