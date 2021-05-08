@@ -82,6 +82,12 @@ fun! s:EditorConfigParse()
 
   let l:plugDir = expand('<sfile>:p:h')
   let l:fileToCheck = expand('%:p')
+
+  " this is empty for certain buffers like the cmdline history
+  if empty(l:fileToCheck)
+    return
+  endif
+
   let l:shellCmd = join([
     \'cd '.l:plugDir,
     \'&&',
