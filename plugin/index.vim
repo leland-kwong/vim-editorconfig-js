@@ -4,7 +4,7 @@
 let g:editorConfigPropHandler = {}
 
 fun! EditorConfigShouldParse()
-  let l:shouldParse = &buftype == '' 
+  let l:shouldParse = &buftype == ''
     \ && &filetype != 'gitcommit'
     \ && !&readonly
   return l:shouldParse
@@ -97,7 +97,7 @@ fun! s:EditorConfigParse()
 
   " cancel previous job so we don't set options
   " for the wrong buffer.
-  let l:shouldCancelJob = exists('s:curJob') 
+  let l:shouldCancelJob = exists('s:curJob')
     \ && job_status(s:curJob) == 'run'
   if l:shouldCancelJob
     call job_stop(s:curJob)
