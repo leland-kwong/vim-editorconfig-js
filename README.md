@@ -10,6 +10,8 @@ Additionally, by leveraging the node ecosystem, we can easily get the latest par
 
 ## Usage
 
+As soon as the plugin has been loaded, it will look for the nearest editorconfig each on `BufEnter` autocommand event.
+
 ### Install with [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```vim
