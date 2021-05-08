@@ -47,8 +47,6 @@ fun! s:EditorConfigSetOptions(chan, data)
 
     if exists('g:editorConfigPropHandler[k]')
       call g:editorConfigPropHandler[k](l:val)
-    elseif exists('g:editorConfigPropHandler[k]')
-      call g:editorConfigPropHandler[k](l:val)
     endif
   endfor
 endfun
@@ -67,8 +65,10 @@ fun! s:EditorConfigParse()
   \])
   let l:jobCmd = ['/usr/bin/bash', '-c', l:shellCmd]
 
-  if exists(s:curJob) && job_status(s:curJob) == 'run'
-    echom 'running job'
+  " cancel previous job so we don't set options
+  " for the wrong buffer.
+  if job_status(s:curJob) == 'run'
+    call job_stop(s:curJob)
   endif
 
   let s:curJob = job_start(l:jobCmd,
