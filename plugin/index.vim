@@ -1,7 +1,7 @@
 " =========
 "  Globals
 " =========
-let g:editorConfigPropHandler = {}
+let s:editorConfigPropHandler = {}
 
 fun! EditorConfigShouldParse()
   let l:shouldParse = &buftype == ''
@@ -21,12 +21,12 @@ fun! s:SetBufVar(name, val)
   endif
 endfun
 
-fun! g:editorConfigPropHandler.indent_size(val)
+fun! s:editorConfigPropHandler.indent_size(val)
   call s:SetBufVar('&tabstop', a:val)
   call s:SetBufVar('&shiftwidth', a:val)
 endfun
 
-fun! g:editorConfigPropHandler.indent_style(val)
+fun! s:editorConfigPropHandler.indent_style(val)
   if a:val == 'space'
     setlocal expandtab
   endif
@@ -36,20 +36,20 @@ fun! g:editorConfigPropHandler.indent_style(val)
   endif
 endfun
 
-fun! g:editorConfigPropHandler.max_line_length(val)
+fun! s:editorConfigPropHandler.max_line_length(val)
   call s:SetBufVar('&textwidth', a:val)
 endfun
 
-fun! g:editorConfigPropHandler.trim_trailing_whitespace(shouldTrim)
-  if !a:shouldTrim
+fun! s:TrimTrailingWhitespace()
+  let l:config = getbufvar(bufnr(), 'editorConfig', {})
+
+  if !get(l:config, 'trim_trailing_whitespace', 0)
     return
   endif
 
-  augroup EditorConfigTrimWhitespace
-    au BufWritePre <buffer> let s:trimSave = winsaveview()
-      \ | keeppatterns %s/\s\+$//e
-      \ | call winrestview(s:trimSave)
-  augroup END
+  let s:trimSave = winsaveview()
+  keeppatterns %s/\s\+$//e
+  call winrestview(s:trimSave)
 endfun
 
 fun! s:EditorConfigSetOptions(chan, data)
@@ -60,17 +60,13 @@ fun! s:EditorConfigSetOptions(chan, data)
     return
   endif
 
-  if exists('#EditorConfigTrimWhitespace')
-    augroup EditorConfigTrimWhitespace
-      au!
-    augroup END
-  endif
+  call setbufvar(bufnr(), 'editorConfig', l:parsedConfig)
 
   for k in keys(l:parsedConfig)
     let l:val = l:parsedConfig[k]
 
-    if exists('g:editorConfigPropHandler[k]')
-      call g:editorConfigPropHandler[k](l:val)
+    if exists('s:editorConfigPropHandler[k]')
+      call s:editorConfigPropHandler[k](l:val)
     endif
   endfor
 endfun
@@ -110,6 +106,7 @@ endfun
 
 augroup EditorConfig
   au!
+  au BufWritePre * call s:TrimTrailingWhitespace()
   au VimEnter,BufEnter *
     \ call s:EditorConfigParse()
 augroup END
