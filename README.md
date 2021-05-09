@@ -1,6 +1,6 @@
 # Vim Editorconfig Js
 
-A highly customizable editorconfig plugin for vim that uses a node backend for parsing.
+Easily customizable editorconfig plugin for vim that uses a node backend for parsing.
 
 ## Features
 
