@@ -12,19 +12,15 @@ Additionally, by leveraging the node ecosystem, we can easily get the latest par
 
 As soon as the plugin has been loaded, it will look for the nearest editorconfig each on `BufEnter` autocommand event.
 
-### Install with [vim-plug](https://github.com/junegunn/vim-plug)
+### Supported properties
+
+* indent_size
+* indent_style
+* max_line_length
+* trim_trailing_whitespace (trims on buffer write)
+
+## Install with [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```vim
 Plug 'leland-kwong/vim-editorconfig-js', { 'do': './install.sh' }
-```
-
-### Custom parser functions
-
-You can define a custom editorconfig property handler like so:
-
-```vim
-" handler for `max_line_length` property
-fun! g:editorConfigPropHandler.max_line_length(val)
-  "...your code"
-endfun
 ```
