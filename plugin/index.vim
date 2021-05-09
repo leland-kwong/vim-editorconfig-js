@@ -1,6 +1,5 @@
-" =========
-"  Globals
-" =========
+let s:plugDir = substitute(
+  \expand('<sfile>:p:h'), '/plugin', '', '')
 let g:editorConfig = #{
   \enableDefaultHandlers: 1
 \}
@@ -49,7 +48,7 @@ fun! s:editorConfigPropHandler.max_line_length(val)
 endfun
 
 fun! s:TrimTrailingWhitespace()
-  let l:config = getbufvar(bufnr(), 'editorConfig', {})
+  let l:config = g:editorConfig.getConfig(bufnr())
 
   if !get(l:config, 'trim_trailing_whitespace', 0)
     return
@@ -60,7 +59,7 @@ fun! s:TrimTrailingWhitespace()
   call winrestview(s:trimSave)
 endfun
 
-fun! s:EditorConfigParsePost(chan, data)
+fun! s:EditorConfigParseSuccess(chan, data)
   let l:parsedConfig = json_decode(a:data)
 
   if exists('l:parsedConfig.err')
@@ -70,6 +69,10 @@ fun! s:EditorConfigParsePost(chan, data)
 
   call setbufvar(bufnr(), 'editorConfig', l:parsedConfig)
   do User OnEditorConfigParse
+endfun
+
+fun! s:EditorConfigParseError(chan, errmsg)
+  echoerr '[editorConfig parse error] '.a:errmsg
 endfun
 
 fun! s:EditorConfigParse()
@@ -93,15 +96,15 @@ fun! s:EditorConfigParse()
     call job_stop(s:curJob)
   endif
 
-  let l:plugDir = expand('<sfile>:p:h')
   let l:shellCmd = join([
-    \'cd '.l:plugDir,
+    \'cd '.s:plugDir,
     \'&&',
     \'node editorconfig-vim.js '.l:fullPathToCheck
   \])
   let l:jobCmd = ['/usr/bin/bash', '-c', l:shellCmd]
   let s:curJob = job_start(l:jobCmd,
-    \ #{callback: function('s:EditorConfigParsePost')})
+    \ #{out_cb: function('s:EditorConfigParseSuccess')
+    \  ,err_cb: function('s:EditorConfigParseError')})
 endfun
 
 fun! s:EditorConfigSetOptions()
