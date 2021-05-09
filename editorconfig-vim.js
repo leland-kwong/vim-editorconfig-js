@@ -9,10 +9,7 @@ async function run() {
       process.stdout.write(JSON.stringify(result) + '\n')
     })
     .catch(function onError(err) {
-      const errorResponse = JSON.stringify({
-        err: err.message
-      })
-      process.stdout.write(errorResponse + '\n')
+      process.stderr.write(err + '\n')
     })
 }
 run()

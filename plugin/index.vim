@@ -62,11 +62,6 @@ endfun
 fun! s:EditorConfigParseSuccess(chan, data)
   let l:parsedConfig = json_decode(a:data)
 
-  if exists('l:parsedConfig.err')
-    echoerr l:parsedConfig.err
-    return
-  endif
-
   call setbufvar(bufnr(), 'editorConfig', l:parsedConfig)
   do User OnEditorConfigParse
 endfun
