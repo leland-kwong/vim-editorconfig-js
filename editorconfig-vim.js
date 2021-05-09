@@ -1,18 +1,14 @@
+const editorconfig = require('editorconfig')
+
 async function run() {
   const args = process.argv
   const [, , filePath] = args
-  const editorconfig = require('editorconfig')
-  const promise = editorconfig.parse(filePath)
 
-  promise
-    .then(function onFulfilled(result) {
-      process.stdout.write(JSON.stringify(result) + '\n')
-    })
-    .catch(function onError(err) {
-      const errorResponse = JSON.stringify({
-        err: err.message
-      })
-      process.stdout.write(errorResponse + '\n')
-    })
+  try {
+    const result = await editorconfig.parse(filePath)
+    process.stdout.write(JSON.stringify(result) + '\n')
+  } catch (err) {
+    process.stderr.write(err + '\n')
+  }
 }
 run()
