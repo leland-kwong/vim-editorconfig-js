@@ -95,7 +95,7 @@ fun! s:EditorConfigParse()
   let l:shellCmd = join([
     \'cd '.s:plugDir,
     \'&&',
-    \'node editorconfig-vim.js '.l:fullPathToCheck
+    \'node editorconfig-vim.js '.'"'.l:fullPathToCheck.'"'
   \])
   let l:jobCmd = [s:bashPath, '-c', l:shellCmd]
   let s:curJob = job_start(l:jobCmd,
