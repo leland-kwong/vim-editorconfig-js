@@ -1,6 +1,6 @@
 {
   "name": "editorconfig-parser",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "editorconfig": "^0.15.3"
+    "editorconfig": "^2.0.0"
   }
 }
