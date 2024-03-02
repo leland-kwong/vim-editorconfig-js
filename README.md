@@ -4,19 +4,19 @@ Easily customizable editorconfig plugin for vim that uses a node backend for par
 
 ## Features
 
-* easily extend functionality via [custom handlers](#custom-handlers)
-* only sets options if the value has changed to prevent full-screen redraws when certain options are set in vim.
+- easily extend functionality via [custom handlers](#custom-handlers)
+- only sets options if the value has changed to prevent full-screen redraws when certain options are set in vim.
 
 ### Supported properties
 
-* indent_size
-* indent_style
-* max_line_length
-* trim_trailing_whitespace (trims on buffer write)
+- indent_size
+- indent_style
+- max_line_length
+- trim_trailing_whitespace (trims on buffer write)
 
 ## Quick Start
 
-Install [nodejs](https://nodejs.org/en/download/) >= 10.12:
+Install latest LTS version of [nodejs](https://nodejs.org/en/download/):
 
 ```sh
 curl -sL install-node.now.sh/lts | bash

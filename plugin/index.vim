@@ -1,4 +1,3 @@
-let s:bashPath = trim(system('which bash'))
 let s:plugDir = substitute(
   \expand('<sfile>:p:h'), '/plugin', '', '')
 let g:editorConfig = #{
@@ -97,7 +96,7 @@ fun! s:EditorConfigParse()
     \'&&',
     \'node editorconfig-vim.js '.'"'.l:fullPathToCheck.'"'
   \])
-  let l:jobCmd = [s:bashPath, '-c', l:shellCmd]
+  let l:jobCmd = ['sh', '-c', l:shellCmd]
   let s:curJob = job_start(l:jobCmd,
     \ #{out_cb: function('s:EditorConfigParseSuccess')
     \  ,err_cb: function('s:EditorConfigParseError')})
